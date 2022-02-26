@@ -4,6 +4,7 @@ namespace App\Entity\Traits;
 
 use App\Repository\VehicleTraitRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait VehicleTrait
 {
@@ -12,34 +13,41 @@ trait VehicleTrait
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(message="Model name cannot be empty")
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $model;
+    private string $model;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(message="Brand name cannot be empty")
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $brand;
+    private string $brand;
 
     /**
-     * @ORM\Column(type="float")
+     * @Assert\Positive(message="Price field must be a positive decimal number")
+     * @ORM\Column(type="decimal", precision=12, scale=2, nullable=false)
      */
-    private $price;
+    private float $price;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @Assert\Type(type="boolean", message="Sold status must be of type boolean")
+     * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $isSold;
+    private $isSold = false;
 
-    public function getId(): ?int
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getModel(): ?string
+    public function getModel(): string
     {
         return $this->model;
     }
@@ -51,19 +59,19 @@ trait VehicleTrait
         return $this;
     }
 
-    public function getBrand(): ?string
+    public function getBrand(): string
     {
         return $this->brand;
     }
 
-    public function setBrand(?string $brand): self
+    public function setBrand(string $brand): self
     {
         $this->brand = $brand;
 
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -75,7 +83,7 @@ trait VehicleTrait
         return $this;
     }
 
-    public function getIsSold(): ?bool
+    public function getIsSold(): bool
     {
         return $this->isSold;
     }
